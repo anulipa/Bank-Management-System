@@ -57,5 +57,4 @@ Customers can create an account, log in, deposit money, withdraw money, and tran
 ### 6.Transaction History
 ![Transaction](readmeImages/Transaction.png.jpg)
 
-
-##Thank You
+## Thank You
