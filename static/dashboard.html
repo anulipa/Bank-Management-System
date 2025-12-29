@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATM Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #26d0ce, #1a2980); height: 100vh; display: flex; justify-content: center; align-items: center; }
+    .dashboard { background: white; padding: 30px; border-radius: 15px; width: 320px; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+    .dashboard h2 { margin-bottom: 25px; color: #1a2980; }
+    .dashboard a { display: block; width: 100%; padding: 12px; margin: 8px 0; font-size: 16px; text-decoration: none; border-radius: 10px; background: #1a2980; color: white; transition: 0.3s; }
+    .dashboard a:hover { background: #26d0ce; color: black; }
+    .exit { background: red !important; }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <h2>ATM Dashboard</h2>
+    <a href="accounts.html">Show Balance</a>
+    <a href="deposit.html">Deposit</a>
+    <a href="withdraw.html">Withdraw</a>
+    <a href="transfer.html">Transfer</a>
+    <a href="history.html">Transaction History</a>
+    <a href="#" id="exitLink" class="exit">Exit</a> 
+  </div>
+
+<script>
+    window.onload = function() {
+        if (!localStorage.getItem('authToken')) {
+            alert("Session expired. Please log in.");
+            window.location.href = 'login.html';
+        }
+    };
+    
+    document.getElementById('exitLink').addEventListener('click', function(event) {
+        event.preventDefault();
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('accountNo');
+        window.location.href = 'login.html';
+    });
+</script>
+</body>
+</html>

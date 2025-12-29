@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Show Balance</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f3f4f6; text-align: center; padding: 40px; }
+    table { width: 80%; margin: auto; border-collapse: collapse; }
+    th, td { border: 1px solid #ccc; padding: 12px; }
+    th { background: #1a2980; color: white; }
+    a { display: inline-block; margin-top: 20px; text-decoration: none; background: #1a2980; color: white; padding: 10px 20px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h2>Current Account Balance</h2>
+  <table>
+    <thead>
+        <tr>
+          <th>Account No</th>
+          <th>Name</th>
+          <th>Balance</th>
+        </tr>
+    </thead>
+    <tbody id="accountDataBody">
+      <tr><td colspan="3">Loading account data...</td></tr>
+    </tbody>
+  </table>
+  <a href="dashboard.html">Back to Dashboard</a>
+
+<script>
+    async function fetchBalance() {
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            alert("Please login first.");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/accounts/balance', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            const data = await response.json();
+            const body = document.getElementById('accountDataBody');
+            body.innerHTML = ''; 
+
+            if (response.ok) {
+                const account = data.account;
+                const row = `<tr>
+                                <td>${account.account_no}</td>
+                                <td>${account.name}</td>
+                                <td>TK ${parseFloat(account.balance).toFixed(2)}</td>
+                             </tr>`;
+                body.innerHTML = row;
+
+            } else {
+                alert('Error fetching balance: ' + data.message);
+                if (response.status === 401) window.location.href = 'login.html';
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            alert('Could not connect to the server.');
+        }
+    }
+    window.onload = fetchBalance;
+</script>
+</body>
+</html>

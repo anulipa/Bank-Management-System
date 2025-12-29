@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATM Login</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #1a2980, #26d0ce); height: 100vh; display: flex; justify-content: center; align-items: center; }
+    .login-box { background: white; padding: 30px; border-radius: 12px; width: 300px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); text-align: center; }
+    .login-box h2 { margin-bottom: 20px; color: #1a2980; }
+    .login-box input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 8px; border: 1px solid #ccc; font-size: 16px; }
+    .login-box button { width: 100%; padding: 10px; background: #1a2980; color: white; font-size: 16px; border: none; border-radius: 8px; cursor: pointer; margin-top: 10px; }
+    .login-box button:hover { background: #26d0ce; }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>ATM Login</h2>
+    <form id="loginForm">
+      <input type="text" placeholder="Account Number" id="account_no" required>
+      <input type="password" placeholder="PIN" id="pin" required>
+      <button type="submit">Login</button>
+    </form>
+  </div>
+
+<script>
+    document.getElementById('loginForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+
+        const account_no = document.getElementById('account_no').value;
+        const pin = document.getElementById('pin').value;
+
+        try {
+            const response = await fetch('/api/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ account_no, pin })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                localStorage.setItem('authToken', data.token); 
+                localStorage.setItem('accountNo', account_no);
+                window.location.href = 'dashboard.html'; 
+            } else {
+                alert('Login Failed: ' + data.message);
+            }
+        } catch (error) {
+            console.error('Network Error:', error);
+            alert('Could not connect to the server (Is the Python server running?).');
+        }
+    });
+</script>
+</body>
+</html>

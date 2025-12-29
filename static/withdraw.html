@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Withdraw Money</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #fff3e0; text-align: center; padding: 40px; }
+    form { background: white; padding: 20px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    input, button { padding: 10px; margin: 10px; font-size: 16px; }
+    button { background: #1a2980; color: white; border: none; border-radius: 8px; }
+    a { display: block; margin-top: 20px; text-decoration: none; color: #1a2980; }
+  </style>
+</head>
+<body>
+  <h2>Withdraw Money</h2>
+  <form id="withdrawForm">
+    <input type="number" placeholder="Enter Amount" id="withdrawAmount" required step="0.01" min="1">
+    <br>
+    <button type="submit">Withdraw</button>
+  </form>
+  <a href="dashboard.html">Back to Dashboard</a>
+
+<script>
+    document.getElementById('withdrawForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+
+        const amount = parseFloat(document.getElementById('withdrawAmount').value);
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            alert("Please login first.");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/transactions/withdraw', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ amount })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(`Withdrawal Successful! New Balance: TK ${data.newBalance.toFixed(2)}`);
+                document.getElementById('withdrawForm').reset();
+            } else {
+                alert('Withdrawal Failed: ' + data.message);
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            alert('Could not connect to the server.');
+        }
+    });
+</script>
+</body>
+</html>

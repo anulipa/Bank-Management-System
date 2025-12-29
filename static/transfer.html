@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Transfer Money</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f1f8e9; text-align: center; padding: 40px; }
+    form { background: white; padding: 20px; border-radius: 12px; display: inline-block; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
+    input, button { padding: 10px; margin: 10px; font-size: 16px; }
+    button { background: #1a2980; color: white; border: none; border-radius: 8px; }
+    a { display: block; margin-top: 20px; text-decoration: none; color: #1a2980; }
+  </style>
+</head>
+<body>
+  <h2>Transfer Money</h2>
+  <form id="transferForm">
+    <input type="text" placeholder="Receiver Account No" id="receiverAccount" required>
+    <br>
+    <input type="number" placeholder="Enter Amount" id="transferAmount" required step="0.01" min="1">
+    <br>
+    <button type="submit">Transfer</button>
+  </form>
+  <a href="dashboard.html">Back to Dashboard</a>
+
+<script>
+    document.getElementById('transferForm').addEventListener('submit', async function(event) {
+        event.preventDefault(); 
+
+        const receiver_account_no = document.getElementById('receiverAccount').value;
+        const amount = parseFloat(document.getElementById('transferAmount').value);
+        const token = localStorage.getItem('authToken');
+
+        if (!token) {
+            alert("Please login first.");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/transactions/transfer', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ receiver_account_no, amount })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                alert(`Transfer Successful! New Balance: TK ${data.newBalance.toFixed(2)}`);
+                document.getElementById('transferForm').reset();
+            } else {
+                alert('Transfer Failed: ' + data.message);
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            alert('Could not connect to the server.');
+        }
+    });
+</script>
+</body>
+</html>

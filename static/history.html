@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transaction History</title>
+    <style>
+        /* Your CSS styles here */
+        body { font-family: Arial, sans-serif; background: #ede7f6; text-align: center; padding: 40px; }
+        table { width: 90%; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ccc; padding: 12px; font-size: 14px; }
+        th { background: #1a2980; color: white; }
+        a { display: inline-block; margin-top: 20px; text-decoration: none; background: #1a2980; color: white; padding: 10px 20px; border-radius: 8px; }
+        .error { color: red; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>Transaction History</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Amount</th>
+            </tr>
+        </thead>
+        <tbody id="historyDataBody">
+            <tr><td colspan="5">Loading transaction history...</td></tr>
+        </tbody>
+    </table>
+    <a href="dashboard.html">Back to Dashboard</a>
+
+<script>
+    async function fetchHistory() {
+        const token = localStorage.getItem('authToken');
+        const body = document.getElementById('historyDataBody');
+        body.innerHTML = '<tr><td colspan="5">Loading transaction history...</td></tr>';
+        
+        if (!token) {
+            alert("Please login first.");
+            window.location.href = 'login.html';
+            return;
+        }
+
+        try {
+            const response = await fetch('/api/accounts/history', {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+            });
+            
+            const data = await response.json();
+            body.innerHTML = ''; 
+
+            if (response.ok) {
+                if (data.history.length === 0) {
+                    body.innerHTML = '<tr><td colspan="5">No transactions found.</td></tr>';
+                    return;
+                }
+                
+                // NOTE: The Flask Backend (app.py) must be updated to include 'transaction_id' and 'account_no'
+                // in the data it sends back for these columns to show correctly.
+                
+                data.history.forEach(tx => {
+                    // tx.account_no is added for display.
+                    // If not returned by the API, it defaults to the logged-in account number from local storage.
+                    const row = `<tr>
+                                    <td>${tx.date}</td>
+                                    <td>${tx.type}</td>
+                                    <td>TK ${tx.amount ? tx.amount.toFixed(2) : '0.00'}</td>
+                                 </tr>`;
+                    body.innerHTML += row;
+                });
+
+            } else {
+                body.innerHTML = `<tr><td colspan="5" class="error">Error fetching history: ${data.message}</td></tr>`;
+                alert('Error fetching history: ' + data.message);
+                if (response.status === 401) window.location.href = 'login.html';
+            }
+        } catch (error) {
+            console.error('API Error:', error);
+            body.innerHTML = '<tr><td colspan="5" class="error">Could not connect to the server.</td></tr>';
+            alert('Could not connect to the server.');
+        }
+    }
+    window.onload = fetchHistory;
+</script>
+</body>
+</html>
