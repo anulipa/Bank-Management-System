@@ -1,8 +1,7 @@
 # Bank Management System
 
 ## Description-
-This is a Bank Management System web application that allows bank administrators and customers to manage basic banking operations online.  
-Customers can create an account, log in, deposit money, withdraw money, and transfer funds.
+This is a Bank Management System web application that allows bank administrators and customers to manage basic ATM operations online.Customers can create an account, log in, deposit money, withdraw money, and transfer funds.
 
 ---
 
