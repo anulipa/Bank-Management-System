@@ -25,7 +25,7 @@ This is a Bank Management System web application that allows bank administrators
 - JavaScript
 
 ### Back end Technologies:
-- PHP
+- Phython
 
 ### Database:
 - MySQL
