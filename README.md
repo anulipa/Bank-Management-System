@@ -36,24 +36,4 @@ This is a Bank Management System web application that allows bank administrators
 
 ---
 
-## Snapshots
-
-### 1.Login Page
-![Login](readmeImages/Login.png.jpg)
-
-### 2.Dashboard
-![Dashboard](readmeImages/Dashboard.png.jpg)
-
-### 3.Balance Page
-![Balance](readmeImages/Balance.png.jpg)
-
-### 4.Deposit Page
-![Deposit](readmeImages/Deposit.png.jpg)
-
-### 5.Withdraw Page
-![Withdraw](readmeImages/Withdraw.png.jpg)
-
-### 6.Transaction History
-![Transaction](readmeImages/Transaction.png.jpg)
-
 ## Thank You
