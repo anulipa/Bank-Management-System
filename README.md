@@ -1,14 +1,15 @@
-# Bank Management System
+# 🏦 Bank Management System
 
-## Description-
-This is a Bank Management System web application that allows bank administrators and customers to manage basic ATM operations online.Customers can create an account, log in, deposit money, withdraw money, and transfer funds.
+##  Description
+This is a Bank Management System web application that allows customers to perform basic banking and ATM operations online.  
+Users can create an account, log in, deposit money, withdraw money, transfer funds, and view transaction history securely.
 
 ---
 
-### It includes :
-- Homepage
-- Customer Registration
-- Login System
+##  Features
+- User Registration and Login
+- Dashboard
+- Balance Inquiry
 - Deposit Money
 - Withdraw Money
 - Fund Transfer
@@ -16,52 +17,55 @@ This is a Bank Management System web application that allows bank administrators
 
 ---
 
-## Technologies Used-
+##  Technologies Used
 
-### Front end Technologies:
+### Frontend
 - HTML
 - CSS
 - Bootstrap
 - JavaScript
 
-### Back end Technologies:
-- Python
+### Backend
+- Python (Flask)
 
-### Database:
+### Database
 - MySQL
 
-### Webserver:
+### Web Server
 - XAMPP
-
-
 
 ---
 
-## Snapshots
+##  Snapshots
 
-### Login Page
+###  Login Page
 ![Login Page](readmeImages/Login.png)
 
-### Dashboard
+###  Dashboard
 ![Dashboard](readmeImages/Dashboard.png)
 
-### Balance Information
+###  Balance Information
 ![Balance](readmeImages/Balance.png)
 
-### Deposit Money
+###  Deposit Money
 ![Deposit](readmeImages/Deposit.png)
 
-### Withdraw Money
+###  Withdraw Money
 ![Withdraw](readmeImages/Withdraw.png)
 
-### Fund Transfer
+###  Fund Transfer
 ![Transfer](readmeImages/Transfer.png)
 
-### Transaction History
+###  Transaction History
 ![Transaction](readmeImages/Transaction.jpg)
 
+---
 
-## Documentation
-- 📄 Project Report: [Bank_Management.pdf](report/Bank_Management.pdf)
+##  Documentation
+- 📘 **Project Report (PDF):**  
+  [Click here to view the Project Report](report/Bank_Management.pdf)
 
-## Thank You
+---
+
+##  Thank You
+
