@@ -56,7 +56,7 @@ This is a Bank Management System web application that allows bank administrators
 ![Transfer](readmeImages/Transfer.png)
 
 ### Transaction History
-![Transaction](readmeImages/Transaction.png)
+![Transaction](readmeImages/Tran_section.png)
 
 
 ## Thank You
