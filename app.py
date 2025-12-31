@@ -8,12 +8,12 @@ import jwt
 from datetime import datetime, timedelta
 from functools import wraps
 
-# --- ক. কনফিগারেশন ও সেটআপ ---
+# ---  কনফিগারেশন ও সেটআপ ---
 app = Flask(__name__, static_url_path='/static', static_folder='static')
 bcrypt = Bcrypt(app)
 app.config['SECRET_KEY'] = 'account_no'
 
-# --- খ. MySQL ডাটাবেস কনফিগারেশন ---
+# ---  MySQL ডাটাবেস কনফিগারেশন ---
 DB_CONFIG = {
     'host': 'localhost',
     'user': 'root', 
@@ -50,13 +50,11 @@ def token_required(f):
         return f(*args, **kwargs)
     return decorated
 
-# --- ঘ. স্ট্যাটিক ফাইল রুট ---
 @app.route('/')
 @app.route('/<path:filename>')
 def serve_static(filename='login.html'):
     return send_from_directory(app.static_folder, filename)
 
-# --- ঙ. API এন্ডপয়েন্ট (API Endpoints) ---
 @app.route('/api/login', methods=['POST'])
 def login():
     data = request.get_json()
@@ -191,9 +189,7 @@ def transfer():
     sender_account_no = request.current_user['account_no']
 
     if not isinstance(amount, (int, float)) or amount <= 0:
-        return jsonify({'message': 'Invalid transfer amount. Must be positive.'}), 400
-    if str(sender_account_no) == str(receiver_account_no):
-        return jsonify({'message': 'Cannot transfer to the same account.'}), 400
+        return jsonify({'message': 'Invalid transfer amount.'}), 400
 
     conn = get_db_connection()
     if conn is None: return jsonify({'message': 'Database unavailable'}), 503
@@ -201,19 +197,7 @@ def transfer():
     
     try:
         conn.start_transaction()
-
-        cursor.execute("SELECT balance FROM accounts WHERE account_no = %s", (sender_account_no,))
-        sender_account_info = cursor.fetchone()
-        
-        if not sender_account_info:
-            conn.rollback()
-            return jsonify({'message': 'Sender account not found'}), 404
-        
-        sender_balance = sender_account_info[0]
-
-        if sender_balance < amount:
-            conn.rollback()
-            return jsonify({'message': 'Insufficient balance for transfer'}), 400
+        current_time = datetime.now() 
 
         cursor.execute("SELECT account_no FROM accounts WHERE account_no = %s", (receiver_account_no,))
         if not cursor.fetchone():
@@ -223,43 +207,46 @@ def transfer():
         cursor.execute("UPDATE accounts SET balance = balance - %s WHERE account_no = %s", (amount, sender_account_no))
         cursor.execute("UPDATE accounts SET balance = balance + %s WHERE account_no = %s", (amount, receiver_account_no))
 
-        cursor.execute("INSERT INTO transactions (account_no, type, amount, receiver_account) VALUES (%s, %s, %s, %s)", (sender_account_no, 'Transfer-Out', amount, receiver_account_no))
-        cursor.execute("INSERT INTO transactions (account_no, type, amount, sender_account) VALUES (%s, %s, %s, %s)", (receiver_account_no, 'Transfer-In', amount, sender_account_no))
+        cursor.execute(
+            "INSERT INTO transactions (account_no, type, amount, receiver_account, date) VALUES (%s, %s, %s, %s, %s)", 
+            (sender_account_no, 'Transfer-Out', amount, receiver_account_no, current_time)
+        )
+                       
+        cursor.execute(
+            "INSERT INTO transactions (account_no, type, amount, sender_account, date) VALUES (%s, %s, %s, %s, %s)", 
+            (receiver_account_no, 'Transfer-In', amount, sender_account_no, current_time)
+        )
         
-        new_balance = sender_balance - amount
         conn.commit()
-
-        return jsonify({'message': 'Transfer successful', 'newBalance': new_balance})
+        return jsonify({'message': 'Transfer successful', 'newBalance': 0})
         
     except Exception as e:
         conn.rollback()
-        print(f"Transfer Error: {e}")
-        return jsonify({'message': 'Server error during transfer'}), 500
+        print(f"Transfer Error Debug: {e}")
+        return jsonify({'message': f'Server error: {str(e)}'}), 500
     finally:
         cursor.close()
         conn.close()
 
 
-@app.route('/api/accounts/history', methods=['GET'])
+@app.route('/api/transactions/history', methods=['GET'])
 @token_required
 def get_history():
     account_no = request.current_user['account_no']
-    
     conn = get_db_connection()
-    if conn is None: return jsonify({'message': 'Database unavailable'}), 503
     cursor = conn.cursor(dictionary=True)
-
+    
     try:
-        cursor.execute(
-            "SELECT DATE_FORMAT(date, '%%year-%%month-%%date %%hour:%%i') as date, type, amount FROM transactions WHERE account_no = %s ORDER BY date DESC LIMIT 10", 
-            (account_no,)
-        )
-        history = cursor.fetchall()
-        
-        return jsonify({'history': history})
+        cursor.execute("SELECT type, amount, date FROM transactions WHERE account_no = %s ORDER BY date DESC", (account_no,))
+        rows = cursor.fetchall()
+        for row in rows:
+            if row['date']:
+                row['date'] = row['date'].isoformat()
+
+        return jsonify(rows), 200
     except Exception as e:
         print(f"History Error: {e}")
-        return jsonify({'message': 'Server error fetching history'}), 500
+        return jsonify({'message': 'Server error'}), 500
     finally:
         cursor.close()
         conn.close()
