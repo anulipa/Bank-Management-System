@@ -37,7 +37,7 @@ This is a Bank Management System web application that allows bank administrators
 
 ---
 
-## Screenshots
+## Snapshots
 
 ### Login Page
 ![Login Page](readmeImages/Login.png)
