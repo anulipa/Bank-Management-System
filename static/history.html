@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transaction History</title>
     <style>
-        /* আপনার ডিজাইন হুবহু এক রাখা হয়েছে */
+    
         body { font-family: Arial, sans-serif; background: #f1f8e9; text-align: center; padding: 40px; }
         h2 { color: #1a2980; }
         table { width: 80%; margin: 20px auto; border-collapse: collapse; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); border-radius: 12px; overflow: hidden; }
@@ -52,8 +52,7 @@
 
                 if (response.ok) {
                     data.forEach(tr => {
-                        // তারিখ ঠিক করার মূল অংশ এখানে
-                        // ডাটাবেস থেকে আসা তারিখকে আসল ডেট ফরম্যাটে রূপান্তর করা হয়েছে
+                        
                         const dateObj = new Date(tr.date);
                         const formattedDate = dateObj.toLocaleString('en-GB', {
                             day: '2-digit',
@@ -78,7 +77,6 @@
             }
         }
 
-        // পেজ লোড হলে ফাংশনটি কল হবে
         fetchHistory();
     </script>
 </body>
