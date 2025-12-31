@@ -33,9 +33,33 @@ This is a Bank Management System web application that allows bank administrators
 ### Webserver:
 - XAMPP
 
+
+
 ---
 
 ## Screenshots
+
+### Login Page
+![Login Page](readmeImages/Login.png)
+
+### Dashboard
+![Dashboard](readmeImages/Dashboard.png)
+
+### Balance Information
+![Balance](readmeImages/Balance.png)
+
+### Deposit Money
+![Deposit](readmeImages/Deposit.png)
+
+### Withdraw Money
+![Withdraw](readmeImages/Withdraw.png)
+
+### Fund Transfer
+![Transfer](readmeImages/Transfer.png)
+
+### Transaction History
+![Transaction](readmeImages/Transaction.jpg)
+
 
 
 
