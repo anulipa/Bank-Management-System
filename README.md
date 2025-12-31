@@ -61,6 +61,7 @@ This is a Bank Management System web application that allows bank administrators
 ![Transaction](readmeImages/Transaction.jpg)
 
 
-
+## Documentation
+- 📄 Project Report: [Bank_Management.pdf](report/Bank_Management.pdf)
 
 ## Thank You
