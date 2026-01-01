@@ -19,8 +19,10 @@ CREATE TABLE transactions (
 );
 
 INSERT INTO accounts (account_no, name, pin, balance)
-VALUES ('1001', 'Anu', '1234', 5000);
-VALUES ('1002', 'Newton', '1234', 5000);
+VALUES 
+('1001', 'Anu', '1234', 5000),
+('1002', 'Newton', '1234', 5000);
+
 
 
 
